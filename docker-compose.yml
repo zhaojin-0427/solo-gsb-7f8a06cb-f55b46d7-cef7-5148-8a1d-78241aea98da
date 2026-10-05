@@ -1,0 +1,8 @@
+services:
+  tz-handoff:
+    build: .
+    image: tz-handoff-checker:latest
+    container_name: tz-handoff-checker
+    ports:
+      - "8000:8000"
+    restart: unless-stopped

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>跨时区交接记录核验</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>跨时区交接记录核验</h1>
+      <p class="subtitle">
+        按业务顺序录入 2～12 条记录。每条填写本地时刻
+        <code>YYYY-MM-DD HH:mm</code> 与 IANA 时区；从第二条起填写距上一条的
+        <strong>最短 / 最长经过秒数</strong>（闭区间，0～86400，最短 ≤ 最长）。
+        夏令时回拨产生的歧义时刻会保留两个 UTC 候选，服务端在全部约束下
+        选出 <strong>UTC 序列字典序最早</strong> 的完整可行路径（非逐行贪选）。
+      </p>
+    </header>
+
+    <section class="card">
+      <div class="table-wrap">
+        <table id="entry-table">
+          <thead>
+            <tr>
+              <th class="col-idx">#</th>
+              <th>本地时刻（YYYY-MM-DD HH:mm）</th>
+              <th>IANA 时区（如 Asia/Shanghai）</th>
+              <th>最短经过秒数</th>
+              <th>最长经过秒数</th>
+              <th class="col-action"></th>
+            </tr>
+          </thead>
+          <tbody id="entry-body"></tbody>
+        </table>
+      </div>
+
+      <div class="toolbar">
+        <button type="button" id="add-btn" class="btn">＋ 添加一行</button>
+        <button type="button" id="example-btn" class="btn btn-ghost">填入示例（含非贪选场景）</button>
+        <button type="button" id="clear-btn" class="btn btn-ghost">清空</button>
+        <button type="button" id="verify-btn" class="btn btn-primary">核验</button>
+      </div>
+    </section>
+
+    <section id="error-panel" class="panel panel-error" hidden></section>
+
+    <section id="result-panel" class="panel panel-result" hidden>
+      <h2 id="result-title"></h2>
+      <p id="result-summary"></p>
+      <div class="table-wrap">
+        <table id="result-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>采用的 UTC</th>
+              <th>时区偏移</th>
+              <th>时区缩写</th>
+              <th>回拨候选</th>
+              <th>距上一条实际秒数</th>
+            </tr>
+          </thead>
+          <tbody id="result-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

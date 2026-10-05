@@ -1,0 +1,4 @@
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.29,<1.0
+# 兜底 IANA 时区数据库（容器内还会通过系统包 tzdata 安装）
+tzdata>=2024.1
