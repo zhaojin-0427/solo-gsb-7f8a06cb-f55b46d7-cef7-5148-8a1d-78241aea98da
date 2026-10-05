@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>跨时区交接记录核验</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>跨时区交接记录核验</h1>
+      <p class="subtitle">
+        按业务顺序录入 2～12 条交接记录，每条包含本地时刻（<code>YYYY-MM-DD HH:mm</code>）与 IANA 时区；
+        第 2 条起填写距上一条的最短 / 最长经过秒数（0～86400，最短 ≤ 最长）。
+        服务端按 <code>fold=0/1</code> 双解释往返校验，在所有完整可行路径中取 UTC 序列字典序最早者。
+      </p>
+    </header>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>记录录入</h2>
+        <div class="actions">
+          <button type="button" id="add-row" class="btn btn-secondary">＋ 增加一行</button>
+          <button type="button" id="verify" class="btn btn-primary">核验</button>
+        </div>
+      </div>
+      <p class="hint">
+        记录数：<span id="row-count">2</span> / 12。编辑任意字段后，旧结论会立即消失，需重新核验。
+      </p>
+
+      <div class="table-wrap">
+        <table class="grid" id="input-table">
+          <thead>
+            <tr>
+              <th class="col-row">#</th>
+              <th class="col-local">本地时刻</th>
+              <th class="col-tz">IANA 时区</th>
+              <th class="col-sec">最短秒数</th>
+              <th class="col-sec">最长秒数</th>
+              <th class="col-op"></th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="alert" class="alert hidden" role="alert"></section>
+
+    <section id="result-panel" class="panel hidden">
+      <div class="panel-head">
+        <h2>核验结果</h2>
+        <span class="badge badge-ok">存在完整可行路径</span>
+      </div>
+      <div class="table-wrap">
+        <table class="grid result" id="result-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>本地时刻</th>
+              <th>时区</th>
+              <th>采用的 UTC</th>
+              <th>时区偏移</th>
+              <th>要求区间（秒）</th>
+              <th>相邻实际秒数</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody id="result-rows"></tbody>
+        </table>
+      </div>
+      <p class="hint">
+        “采用的 UTC”为所选完整可行路径中该行对应的 UTC 时刻；夏令时秋拨歧义时刻存在两个候选时，
+        已在全局可行路径中择字典序最早者，而非逐行贪心。
+      </p>
+    </section>
+  </main>
+
+  <datalist id="tz-list"></datalist>
+  <script src="/static/app.js"></script>
+</body>
+</html>

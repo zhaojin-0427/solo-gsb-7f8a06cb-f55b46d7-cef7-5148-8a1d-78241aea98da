@@ -1,0 +1,8 @@
+services:
+  handover-check:
+    build: .
+    image: tz-handover-check:latest
+    container_name: tz-handover-check
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
